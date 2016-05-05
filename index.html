@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Game of Life</title>
+  <style>
+
+    .cell {
+      width: 10px;
+      height: 10px;
+      border: solid 1px #d3d3d3;
+      display: inline-block;
+      float: left;
+    }
+    .alive {
+      background-color: #333333;
+    }
+    .dead {
+      background-color: white;
+    }
+    
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <button id="startBtn">Start</button>
+  <button id="stopBtn">Stop</button>
+  <button id="clearBtn">Clear</button>
+  <br>
+  Speed: <button id="speedMinusBtn">-</button>
+  <button id="speedPlusBtn">+</button>
+  <script src="index.js"></script>
+</body>
+</html>
