@@ -24,22 +24,30 @@ Grid.prototype.makeAlive = function(x, y) {
   this.cells[x][y] = true
 }
 
+// Check if a given coordinate is within the grid
 Grid.prototype.isInside = function (x, y) {
   return x < this.width && x >= 0 && y < this.height && y >= 0
 }
 
-// returns the state of the cell after one step
+/* returns the state of the cell after one step
+   Rules :
+    1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+    2. Any live cell with two or three live neighbours lives on to the next generation.
+    3. Any live cell with more than three live neighbours dies, as if by over-population.
+    4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+*/
 Grid.prototype.act = function (x, y) {
   let neighborsCoords = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
   let neighbors = neighborsCoords.map(coord => {
     let newX = x + coord[0], newY = y + coord[1]
     if (this.isInside(newX, newY)) 
       return this.cells[newX][newY]
-    return false
+    return false // if a neighbor is not within the grid, it can be considered dead
   })
 
   // Calculating the number of live neighboring cells
   let liveNeighborsCount = neighbors.reduce((count, neighbor) => count + (neighbor ? 1 : 0), 0)
+
   if (liveNeighborsCount < 2 || liveNeighborsCount > 3)
     return false
   if (liveNeighborsCount == 3)
@@ -78,23 +86,7 @@ Grid.prototype.toDOM = function() {
   })
 }
 
-// let life = new Grid(3, 3)
-// life.makeAlive(0, 1)
-// life.makeAlive(1, 1)
-// life.makeAlive(2, 1)
-// console.log(life.toString())
-// life.turn()
-// console.log(life.toString())
-
-let life = new Grid(45, 45)
-// life.makeAlive(0, 0)
-// life.makeAlive(0, 1)
-// life.makeAlive(1, 0)
-// life.makeAlive(2, 3)
-// life.makeAlive(3, 2)
-// life.makeAlive(3, 3)
-// life.turn()
-// life.turn()
+let life = new Grid(35, 35)
 
 let timer
 let speed = 500
@@ -104,14 +96,10 @@ function draw() {
   life.toDOM()
 }
 
-function turnAdnDraw() {
+function turnAndDrawEvery() {
   life.turn()
   life.toDOM()
-  timer = setTimeout(turnAdnDraw, speed)
-}
-
-function repeatEvery(duration) {
-  timer = setTimeout(turnAdnDraw, duration)
+  timer = setTimeout(turnAndDrawEvery, speed)
 }
 
 let startBtn = document.querySelector('#startBtn')
@@ -119,7 +107,7 @@ let stopBtn = document.querySelector('#stopBtn')
 stopBtn.disabled = true
 startBtn.addEventListener('click', e => {
   inMotion = true
-  repeatEvery(speed)
+  turnAndDrawEvery(speed)
   startBtn.disabled = true
   stopBtn.disabled = false
 })
@@ -140,17 +128,12 @@ document.querySelector('#clearBtn').addEventListener('click', e => {
 document.querySelector('#speedPlusBtn').addEventListener('click', e => {
   clearTimeout(timer)
   speed -= 50
-  repeatEvery(speed)
+  turnAndDrawEvery(speed)
 })
 document.querySelector('#speedMinusBtn').addEventListener('click', e => {
   clearTimeout(timer)
   speed += 50
-  repeatEvery(speed)
+  turnAndDrawEvery(speed)
 })
 
 draw()
-
-
-
-
-
