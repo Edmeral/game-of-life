@@ -63,15 +63,14 @@ Grid.prototype.toDOM = function() {
   gridDiv.innerHTML = ""
   gridDiv.style.width =  12 * this.width + 'px'
   gridDiv.style.height =  12 * this.height + 'px'
-  let grid = this
   this.cells.forEach((row, x) => {
     row.forEach((cell, y) => {
       let elem = document.createElement('div')
       elem.className = 'cell ' + (cell ? 'alive' : 'dead')
       elem.addEventListener('mousedown', e => {
         if (!inMotion) {
-          grid.cells[x][y] = !grid.cells[x][y]
-          elem.className = 'cell ' + (grid.cells[x][y] ? 'alive' : 'dead')
+          this.cells[x][y] = !this.cells[x][y]
+          elem.className = 'cell ' + (this.cells[x][y] ? 'alive' : 'dead')
         }
       })
       gridDiv.appendChild(elem)
